@@ -2,15 +2,19 @@
 export default {
   data() {
     return {
-      floor: [],
-      activeFloor: 1,
+      floor: [3, 5],
+      activeFloor: 0,
       top: 608,
       activeLift: false,
       isWaiting: false,
     };
   },
+  mounted() {
+    if (localStorage.activeFloor) {
+      this.add(Number(localStorage.activeFloor));
+    }
+  },
   methods: {
-    onLeaveCanceled() {},
     move() {
       if (this.floor.length !== 0) {
         this.$refs.lift.style.top = `${this.top - (this.floor[0] - 1) * 150}px`;
@@ -20,6 +24,7 @@ export default {
         let moveDuring = Math.abs(this.floor[0] - this.activeFloor) * 1000;
         setTimeout(() => {
           this.activeFloor = this.floor.shift();
+          localStorage.activeFloor = this.activeFloor;
           this.isWaiting = true;
         }, moveDuring);
         setTimeout(() => {
@@ -32,6 +37,7 @@ export default {
       }
     },
     add(floorNumber) {
+      debugger;
       if (
         !this.floor.includes(floorNumber) &&
         this.activeFloor !== floorNumber
@@ -109,6 +115,7 @@ export default {
       {{ floor[0] }}
     </p>
   </div>
+  {{ floor }}
 </template>
 
 <style scoped>
